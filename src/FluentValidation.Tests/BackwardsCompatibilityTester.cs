@@ -16,6 +16,7 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 namespace FluentValidation.Tests {
+	using System;
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
@@ -23,6 +24,7 @@ namespace FluentValidation.Tests {
 	using Internal;
 	using NUnit.Framework;
 	using Results;
+	using Syntax;
 	using Validators;
 #pragma warning disable 612,618
 
@@ -101,6 +103,14 @@ namespace FluentValidation.Tests {
 		}
 
 
+		[Test]
+		public void Sets_options_using_old_fluent_interfaces() {
+			validator.RuleFor(x => x.Surname).Foo().WithMessage("No Foos");
+			var result = validator.Validate(new Person() { Surname = "foo" });
+			result.Errors.Single().ErrorMessage.ShouldEqual("No Foos");
+		
+		}
+
 		[ValidationMessage(Key = "notnull_error")]
 		public class ObsoleteNotNullValidator<T, TProperty> : IPropertyValidator<T, TProperty> {
 			public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {
@@ -113,6 +123,12 @@ namespace FluentValidation.Tests {
 
 				return PropertyValidatorResult.Success();
 			}
+		}
+	}
+
+	public static class ObsoleteValidatorExt {
+		public static IRuleBuilderOptions<T,string > Foo<T>(this IRuleBuilder<T,string > ruleBuilder) {
+			return ruleBuilder.NotEqual("foo");
 		}
 	}
 #pragma warning restore 612,618
