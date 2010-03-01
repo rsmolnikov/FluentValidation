@@ -59,12 +59,11 @@ namespace FluentValidation {
 		}
 
 		public void AddRule(IValidationRule<T> rule) {
-			nestedValidators.Add(new SimpleRuleBuilder<T>(rule));
+			nestedValidators.Add(rule);
 		}
 
 		public virtual IValidatorDescriptor CreateDescriptor() {
-			//return new ValidatorDescriptor<T>(nestedValidators.SelectMany(x => x).ToList());
-			throw new NotImplementedException();
+			return new ValidatorDescriptor<T>(nestedValidators);
 		}
 
 		/// <summary>
@@ -108,8 +107,7 @@ namespace FluentValidation {
 		}
 
 		public IEnumerator<IValidationRule<T>> GetEnumerator() {
-			//return nestedValidators.SelectMany(x => x).ToList().GetEnumerator();
-			throw new NotImplementedException();
+			return nestedValidators.GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() {

@@ -32,11 +32,10 @@ namespace FluentValidation.Internal {
 	/// <typeparam name="TProperty">Type of property being validated</typeparam>
 	public class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IRuleBuilderInitial<T, TProperty> {
 		readonly PropertyRule<T> rule;
-		Func<CascadeMode> cascadeMode = () => ValidatorOptions.CascadeMode;
 
 		public CascadeMode CascadeMode {
-			get { return cascadeMode(); }
-			set { cascadeMode = () => value; }
+			get { return rule.CascadeMode; }
+			set { rule.CascadeMode = value; }
 		}
 
 		/// <summary>

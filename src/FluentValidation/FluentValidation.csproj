@@ -88,11 +88,9 @@
     <Compile Include="Internal\IConfigurable.cs" />
     <Compile Include="Internal\IFluentInterface.cs" />
     <Compile Include="Internal\IFluentInterfaceMarker.cs" />
-    <Compile Include="Internal\IValidationRuleCollection.cs" />
     <Compile Include="Internal\PropertyModel.cs" />
     <Compile Include="Internal\PropertySelector.cs" />
     <Compile Include="Internal\ResourceHelper.cs" />
-    <Compile Include="Internal\SimpleRuleBuilder.cs" />
     <Compile Include="IValidationRule.cs" />
     <Compile Include="Internal\MemberNameValidatorSelector.cs" />
     <Compile Include="Internal\MemberValidatorSelector.cs" />

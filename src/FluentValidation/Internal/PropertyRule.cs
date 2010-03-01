@@ -67,11 +67,12 @@ namespace FluentValidation.Internal {
 			validators.Add(validator);
 		}
 
-		public void ReplaceValidator(IPropertyValidator target, IPropertyValidator toReplaceWith) {
-			var index = validators.IndexOf(target);
+		public void ReplaceCurrentValidtor(IPropertyValidator newValidator) {
+			var index = validators.IndexOf(CurrentValidator);
 			//TODO: Ensure that it is a valid index
-			validators.Insert(index, toReplaceWith);
-			validators.Remove(target);
+			validators.Insert(index, newValidator);
+			validators.Remove(CurrentValidator);
+			CurrentValidator = newValidator;
 		}
 
 		/// <summary>
@@ -116,12 +117,11 @@ namespace FluentValidation.Internal {
 
 			string propertyName = BuildPropertyName(context);
 
-//			if (context.Selector.CanExecute(this, propertyName)) {
-//				var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc((T)x), propertyName, Member);
-//				validationContext.PropertyChain = context.PropertyChain;
-//				return validator.Validate(validationContext);
-//			}
-			throw new NotImplementedException();
+			if (context.Selector.CanExecute(this, propertyName)) {
+				var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc((T)x), propertyName, Member);
+				validationContext.PropertyChain = context.PropertyChain;
+				return validator.Validate(validationContext);
+			}
 
 			return Enumerable.Empty<ValidationFailure>();
 		}

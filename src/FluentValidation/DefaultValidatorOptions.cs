@@ -107,7 +107,7 @@ namespace FluentValidation {
 			return rule.Configure(config => {
 				var originalValidator = config.CurrentValidator;
 				var newValidator = new DelegatingValidator(x => predicate((T)x), originalValidator);
-				config.ReplaceValidator(originalValidator, newValidator);
+				config.ReplaceCurrentValidtor(newValidator);
 			});
 		}
 

@@ -63,10 +63,9 @@ namespace FluentValidation.Tests {
 		}
 
 		private PropertyRule<TestObject> CreateRule(Expression<Func<TestObject, object>> expression) {
-//			var builder = new RuleBuilder<TestObject, object>(expression);
-//			builder.SetValidator(new NotNullValidator());
-//			return (PropertyRule<TestObject, object>)builder.Single();
-			throw new NotImplementedException();
+			var rule = PropertyRule<TestObject>.Create(expression);
+			rule.AddValidator(new NotNullValidator());
+			return rule;
 		}
 
 		private class TestObject {
