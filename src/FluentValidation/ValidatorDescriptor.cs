@@ -36,7 +36,7 @@ namespace FluentValidation {
 
 		public virtual string GetName(string property) {
 			var nameUsed = Rules
-				.OfType<IPropertyRule<T>>()
+				.OfType<PropertyRule<T>>()
 				.Where(x => x.Member.Name == property)
 				.Select(x => x.PropertyDescription).FirstOrDefault();
 
@@ -44,8 +44,11 @@ namespace FluentValidation {
 		}
 
 		public virtual ILookup<string, IPropertyValidator> GetMembersWithValidators() {
-			return Rules.OfType<IPropertyRule<T>>()
-					.ToLookup(x => x.Member.Name, x => x.Validator);
+			var query = from rule in Rules.OfType<PropertyRule<T>>()
+						from validator in rule.Validators
+						select new{ memberName = rule.Member.Name, validator };
+
+			return query.ToLookup(x => x.memberName, x => x.validator);
 		}
 
 		public IEnumerable<IPropertyValidator> GetValidatorsForMember(string name) {

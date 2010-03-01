@@ -31,7 +31,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T">The type of the object being validated</typeparam>
 	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule<T>> {
-		readonly List<IValidationRuleCollection<T>> nestedValidators = new List<IValidationRuleCollection<T>>();
+		readonly List<IValidationRule<T>> nestedValidators = new List<IValidationRule<T>>();
 
 		ValidationResult IValidator.Validate(object instance) {
 			//TODO: Type checking
@@ -63,7 +63,8 @@ namespace FluentValidation {
 		}
 
 		public virtual IValidatorDescriptor CreateDescriptor() {
-			return new ValidatorDescriptor<T>(nestedValidators.SelectMany(x => x).ToList());
+			//return new ValidatorDescriptor<T>(nestedValidators.SelectMany(x => x).ToList());
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -77,8 +78,10 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 			expression.Guard("Cannot pass null to RuleFor");
-			var ruleBuilder = new RuleBuilder<T, TProperty>(expression);
-			nestedValidators.Add(ruleBuilder);
+			var rule = PropertyRule<T>.Create(expression);
+			var ruleBuilder = new RuleBuilder<T, TProperty>(rule);
+
+			nestedValidators.Add(rule);
 			return ruleBuilder;
 		}
 
@@ -105,7 +108,8 @@ namespace FluentValidation {
 		}
 
 		public IEnumerator<IValidationRule<T>> GetEnumerator() {
-			return nestedValidators.SelectMany(x => x).ToList().GetEnumerator();
+			//return nestedValidators.SelectMany(x => x).ToList().GetEnumerator();
+			throw new NotImplementedException();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() {

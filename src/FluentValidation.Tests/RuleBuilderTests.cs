@@ -1,4 +1,4 @@
-#region License
+/*#region License
 // Copyright 2008-2009 Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -195,4 +195,4 @@ namespace FluentValidation.Tests {
 			}
 		}
 	}
-}
+}*/
