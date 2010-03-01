@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Copyright 2008-2009 Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -16,19 +16,9 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation {
-	using System;
-	using System.Collections.Generic;
+namespace FluentValidation.Syntax {
 	using Internal;
 	using Validators;
-
-	/// <summary>
-	/// Rule builder that starts the chain
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderInitial<T, TProperty> : IFluentInterface, IRuleBuilder<T, TProperty>, IConfigurable<RuleBuilder<T, TProperty>, IRuleBuilderInitial<T, TProperty>> {
-	}
 
 	/// <summary>
 	/// Rule builder 
@@ -49,15 +39,5 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="validator">The validator to use</param>
 		IRuleBuilderOptions<T, TProperty> SetValidator(IValidator<TProperty> validator);
-	}
-
-
-	/// <summary>
-	/// Rule builder
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderOptions<T, TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule<T>, IRuleBuilderOptions<T, TProperty>> {
-
 	}
 }

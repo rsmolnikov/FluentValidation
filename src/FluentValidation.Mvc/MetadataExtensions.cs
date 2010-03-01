@@ -22,6 +22,7 @@ namespace FluentValidation.Mvc.MetadataExtensions {
 	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations;
 	using System.Web.Mvc;
+	using Syntax;
 	using Validators;
 
 	public static class MetadataExtensions {

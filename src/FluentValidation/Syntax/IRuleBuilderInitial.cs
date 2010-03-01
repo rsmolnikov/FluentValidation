@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Copyright 2008-2009 Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -16,20 +16,15 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Internal {
-	using System;
-	using System.ComponentModel;
+namespace FluentValidation.Syntax {
+	using Internal;
 
-	//From Kzu's blog: http://www.clariusconsulting.net/blogs/kzu/archive/2008/03/10/58301.aspx
-	[EditorBrowsable(EditorBrowsableState.Never)]
-	public interface IFluentInterface {
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		Type GetType();
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		int GetHashCode();
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		string ToString();
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		bool Equals(object obj);
+	/// <summary>
+	/// Rule builder that starts the chain
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TProperty"></typeparam>
+	public interface IRuleBuilderInitial<T, TProperty> : IFluentInterface, IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule<T>, IRuleBuilderInitial<T, TProperty>> {
+		CascadeStep<T, TProperty> Cascade();
 	}
 }

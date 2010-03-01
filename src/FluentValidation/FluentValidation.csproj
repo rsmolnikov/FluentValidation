@@ -78,16 +78,15 @@
     <Compile Include="Attributes\AttributedValidatorFactory.cs" />
     <Compile Include="Attributes\ValidatorAttribute.cs" />
     <Compile Include="BackwardsCompatibility.cs" />
-    <Compile Include="DefaultRuleBuilderExtensions.cs" />
     <Compile Include="DefaultValidatorExtensions.cs" />
     <Compile Include="DefaultValidatorOptions.cs" />
     <Compile Include="InlineValidator.cs" />
     <Compile Include="Internal\DefaultValidatorSelector.cs" />
     <Compile Include="Internal\DelegateValidator.cs" />
     <Compile Include="Internal\Extensions.cs" />
-    <Compile Include="Internal\IConfigurable.cs" />
-    <Compile Include="Internal\IFluentInterface.cs" />
-    <Compile Include="Internal\IFluentInterfaceMarker.cs" />
+    <Compile Include="Syntax\CascadeStep.cs" />
+    <Compile Include="Syntax\IConfigurable.cs" />
+    <Compile Include="Syntax\IFluentInterface.cs" />
     <Compile Include="Internal\PropertySelector.cs" />
     <Compile Include="Internal\ResourceHelper.cs" />
     <Compile Include="IValidationRule.cs" />
@@ -96,6 +95,8 @@
     <Compile Include="Internal\MessageFormatter.cs" />
     <Compile Include="Internal\PropertyChain.cs" />
     <Compile Include="Internal\PropertyRule.cs" />
+    <Compile Include="Syntax\IRuleBuilder.cs" />
+    <Compile Include="Syntax\IRuleBuilderInitial.cs" />
     <Compile Include="ValidationContext.cs" />
     <Compile Include="Internal\IValidatorSelector.cs" />
     <Compile Include="Resources\Messages.Designer.cs">
@@ -103,8 +104,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Syntax.cs" />
-    <Compile Include="Internal\RuleBuilder.cs" />
+    <Compile Include="Syntax\IRuleBuilderOptions.cs" />
+    <Compile Include="Syntax\RuleBuilder.cs" />
     <Compile Include="IValidator.cs" />
     <Compile Include="IValidatorDescriptor.cs" />
     <Compile Include="IValidatorFactory.cs" />

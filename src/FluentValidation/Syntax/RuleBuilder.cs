@@ -16,13 +16,9 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Internal {
+namespace FluentValidation.Syntax {
 	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using Results;
+	using Internal;
 	using Validators;
 
 	/// <summary>
@@ -73,9 +69,13 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-		public IRuleBuilderInitial<T, TProperty> Configure(Action<RuleBuilder<T, TProperty>> configurator) {
-			configurator(this);
+		IRuleBuilderInitial<T, TProperty> IConfigurable<PropertyRule<T>, IRuleBuilderInitial<T, TProperty>>.Configure(Action<PropertyRule<T>> configurator) {
+			configurator(rule);
 			return this;
+		}
+
+		public CascadeStep<T, TProperty> Cascade() {
+			return new CascadeStep<T, TProperty>(this);
 		}
 	}
 }

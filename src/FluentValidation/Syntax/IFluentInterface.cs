@@ -16,20 +16,23 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Internal {
-	//Hmm, not sure I like this...
-	public interface IFluentInterfaceMarker<T, TNext> {
-	}
+namespace FluentValidation.Syntax {
+	using System;
+	using System.ComponentModel;
 
-	internal class FluentInterfaceMarker<T, TNext> : IFluentInterfaceMarker<T, TNext> {
-		readonly TNext next;
+	//From Kzu's blog: http://www.clariusconsulting.net/blogs/kzu/archive/2008/03/10/58301.aspx
+	[EditorBrowsable(EditorBrowsableState.Never)]
+	public interface IFluentInterface {
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		Type GetType();
 
-		public FluentInterfaceMarker(TNext next) {
-			this.next = next;
-		}
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		int GetHashCode();
 
-		public TNext Next {
-			get { return next; }
-		}
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		string ToString();
+
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		bool Equals(object obj);
 	}
 }

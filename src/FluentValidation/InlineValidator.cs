@@ -17,6 +17,8 @@
 #endregion
 
 namespace FluentValidation {
+	using Syntax;
+
 	/// <summary>
 	/// Validator implementation that allows rules to be defined without inheriting from AbstractValidator.
 	/// </summary>

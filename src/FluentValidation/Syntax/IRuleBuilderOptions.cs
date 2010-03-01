@@ -6,7 +6,7 @@
 // You may obtain a copy of the License at 
 // 
 // http://www.apache.org/licenses/LICENSE-2.0 
-// 
+//
 // Unless required by applicable law or agreed to in writing, software 
 // distributed under the License is distributed on an "AS IS" BASIS, 
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
@@ -16,22 +16,14 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Internal {
-	using System;
-	using System.ComponentModel;
+namespace FluentValidation.Syntax {
+	using Internal;
 
 	/// <summary>
-	/// Represents an object that is configurable.
+	/// Rule builder
 	/// </summary>
-	/// <typeparam name="TConfiguration">Type of object being configured</typeparam>
-	/// <typeparam name="TNext">Return type</typeparam>
-	public interface IConfigurable<TConfiguration, TNext> {
-		/// <summary>
-		/// Configures the current object.
-		/// </summary>
-		/// <param name="configurator">Action to configure the object.</param>
-		/// <returns></returns>
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		TNext Configure(Action<TConfiguration> configurator);
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TProperty"></typeparam>
+	public interface IRuleBuilderOptions<T, TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule<T>, IRuleBuilderOptions<T, TProperty>> {
 	}
 }

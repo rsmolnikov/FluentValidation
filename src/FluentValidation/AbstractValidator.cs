@@ -24,6 +24,7 @@ namespace FluentValidation {
 	using System.Linq.Expressions;
 	using Internal;
 	using Results;
+	using Syntax;
 	using Validators;
 
 	/// <summary>

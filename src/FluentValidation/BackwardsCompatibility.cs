@@ -122,6 +122,7 @@ namespace FluentValidation {
 	using System;
 	using Internal;
 	using Results;
+	using Syntax;
 	using Validators;
 
 	public static class ObsoleteExtensions {
