@@ -34,7 +34,6 @@ namespace FluentValidation {
 		readonly List<IValidationRule<T>> nestedValidators = new List<IValidationRule<T>>();
 
 		ValidationResult IValidator.Validate(object instance) {
-			//TODO: Type checking
 			return Validate((T)instance);
 		}
 
