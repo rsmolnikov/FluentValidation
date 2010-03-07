@@ -23,38 +23,39 @@ namespace FluentValidation.Validators {
 	using System.Linq.Expressions;
 	using Attributes;
 	using Internal;
+	using Resources;
 	using Results;
 
 	public abstract class PropertyValidator : IPropertyValidator {
 		private readonly List<Func<object, object>> customFormatArgs = new List<Func<object, object>>();
-		private ResourceMetaData resourceMeta;
+		private IErrorMessageSource errorSource;
 
 		public Func<object, object> CustomStateProvider { get; set; }
 
 		public bool SupportsStandaloneValidation { get; set; }
 
 		public Type ErrorMessageResourceType {
-			get { return resourceMeta.ResourceType; }
+			get { return errorSource.ResourceType; }
 		}
 
 		public string ErrorMessageResourceName {
-			get { return resourceMeta.ResourceName; }
+			get { return errorSource.ResourceName; }
 		}
 
 		public string ErrorMessageTemplate {
-			get { return resourceMeta.Accessor(); }
+			get { return errorSource.BuildErrorMessage(); }
 		}
 
 		public void SetErrorMessage(string errorMessage) {
-			resourceMeta = new ResourceMetaData(null, null, () => errorMessage);
+			errorSource = new StringErrorMessageSource(errorMessage);
 		}
 
 		public void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
-			resourceMeta = ResourceHelper.BuildResourceAccessor(resourceName, errorMessageResourceType);
+			errorSource = new LocalizedErrorMessageSource(errorMessageResourceType, resourceName);
 		}
 
 		public void SetErrorMessage(Expression<Func<string>> resourceSelector) {
-			resourceMeta = ResourceHelper.BuildResourceAccessor(resourceSelector);
+			errorSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector);
 		}
 
 		public ICollection<Func<object, object>> CustomMessageFormatArguments {
@@ -62,15 +63,15 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
-			resourceMeta = ResourceHelper.BuildResourceAccessor(errorMessageResourceName, errorMessageResourceType);
+			errorSource = new LocalizedErrorMessageSource(errorMessageResourceType, errorMessageResourceName);
 		}
 
 		protected PropertyValidator(string errorMessage) {
-			resourceMeta = new ResourceMetaData(null, null, () => errorMessage);
+			errorSource = new StringErrorMessageSource(errorMessage);
 		}
 
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
-			resourceMeta = ResourceHelper.BuildResourceAccessor(errorMessageResourceSelector);
+			errorSource = LocalizedErrorMessageSource.CreateFromExpression(errorMessageResourceSelector);
 		}
 
 		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {

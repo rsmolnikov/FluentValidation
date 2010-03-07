@@ -84,11 +84,11 @@
     <Compile Include="Internal\DefaultValidatorSelector.cs" />
     <Compile Include="Internal\DelegateValidator.cs" />
     <Compile Include="Internal\Extensions.cs" />
+    <Compile Include="Resources\ErrorMessageSource.cs" />
     <Compile Include="Syntax\CascadeStep.cs" />
     <Compile Include="Syntax\IConfigurable.cs" />
     <Compile Include="Syntax\IFluentInterface.cs" />
     <Compile Include="Internal\PropertySelector.cs" />
-    <Compile Include="Internal\ResourceHelper.cs" />
     <Compile Include="IValidationRule.cs" />
     <Compile Include="Internal\MemberNameValidatorSelector.cs" />
     <Compile Include="Internal\MemberValidatorSelector.cs" />

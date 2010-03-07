@@ -169,8 +169,8 @@ namespace FluentValidation.Attributes {
 				return attribute.Message;
 			}
 
-			var accessor = ResourceHelper.BuildResourceAccessor(attribute.Key, ValidatorOptions.ResourceProviderType ?? typeof(Messages));
-			var message = accessor.Accessor();
+			var messageSource = new LocalizedErrorMessageSource(ValidatorOptions.ResourceProviderType ?? typeof(Messages), attribute.Key);
+			var message = messageSource.BuildErrorMessage();
 
 			if (message == null) {
 				throw new InvalidOperationException(string.Format("Could not find a resource key with the name '{0}'.", attribute.Key));
