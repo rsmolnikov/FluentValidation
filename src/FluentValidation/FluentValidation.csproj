@@ -84,7 +84,9 @@
     <Compile Include="Internal\DefaultValidatorSelector.cs" />
     <Compile Include="Internal\DelegateValidator.cs" />
     <Compile Include="Internal\Extensions.cs" />
-    <Compile Include="Resources\ErrorMessageSource.cs" />
+    <Compile Include="Resources\LocalizedErrorMessageSource.cs" />
+    <Compile Include="Resources\IErrorMessageSource.cs" />
+    <Compile Include="Resources\StringErrorMessageSource.cs" />
     <Compile Include="Syntax\CascadeStep.cs" />
     <Compile Include="Syntax\IConfigurable.cs" />
     <Compile Include="Syntax\IFluentInterface.cs" />
