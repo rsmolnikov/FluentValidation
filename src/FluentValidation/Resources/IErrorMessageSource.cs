@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Copyright 2008-2009 Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -16,32 +16,27 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Validators {
+namespace FluentValidation.Resources {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
-	using Resources;
-	using Results;
 
-	internal abstract class NoopPropertyValidator : IPropertyValidator {
-		public IErrorMessageSource ErrorMessageSource {
-			get { return null; }
-			set {  }
-		}
+	/// <summary>
+	/// Provides error message templates
+	/// </summary>
+	public interface IErrorMessageSource {
+		/// <summary>
+		/// Construct the error message template
+		/// </summary>
+		/// <returns>Error message template</returns>
+		string BuildErrorMessage();
 
-		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
+		/// <summary>
+		/// The name of the resource if localized.
+		/// </summary>
+		string ResourceName { get; }
 
-		public virtual ICollection<Func<object, object>> CustomMessageFormatArguments {
-			get { return new List<Func<object, object>>(); }
-		}
-
-		public virtual bool SupportsStandaloneValidation {
-			get { return false; }
-		}
-
-		public Func<object, object> CustomStateProvider {
-			get { return null; }
-			set { }
-		}
+		/// <summary>
+		/// The type of the resource provider if localized.
+		/// </summary>
+		Type ResourceType { get; }
 	}
 }

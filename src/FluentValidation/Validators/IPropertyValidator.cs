@@ -21,6 +21,7 @@ namespace FluentValidation.Validators {
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using Internal;
+	using Resources;
 	using Results;
 
 	/// <summary>
@@ -29,16 +30,12 @@ namespace FluentValidation.Validators {
 	/// Please inherit from <see cref="PropertyValidator">PropertyValidator</see> instead.
 	/// </summary>
 	public interface IPropertyValidator {
+		IErrorMessageSource ErrorMessageSource { get; set; }
+
 		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
-		string ErrorMessageTemplate { get; }
 		ICollection<Func<object, object>> CustomMessageFormatArguments { get; }
 		bool SupportsStandaloneValidation { get; }
-		Type ErrorMessageResourceType { get; }
-		string ErrorMessageResourceName { get; }
 		Func<object, object> CustomStateProvider { get; set; }
 
-		void SetErrorMessage(string message);
-		void SetErrorMessage(Type errorMessageResourceType, string resourceName);
-		void SetErrorMessage(Expression<Func<string>> resourceSelector);
 	}
 }

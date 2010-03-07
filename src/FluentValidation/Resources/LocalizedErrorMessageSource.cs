@@ -22,38 +22,20 @@ namespace FluentValidation.Resources {
 	using System.Reflection;
 	using Internal;
 
-	public interface IErrorMessageSource {
-		string BuildErrorMessage();
-		string ResourceName { get; }
-		Type ResourceType { get; }
-	}
-
-	public class StringErrorMessageSource : IErrorMessageSource {
-		string errorMessage;
-
-		public StringErrorMessageSource(string errorMessage) {
-			this.errorMessage = errorMessage;
-		}
-
-		public string BuildErrorMessage() {
-			return errorMessage;
-		}
-
-		public string ResourceName {
-			get { return null; }
-		}
-
-		public Type ResourceType {
-			get { return null; }
-		}
-	}
-
+	/// <summary>
+	/// Implementation of IErrorMessageSource that uses a resource provider and resource name.
+	/// </summary>
 	public class LocalizedErrorMessageSource : IErrorMessageSource {
 		static readonly Type defaultResourceType = typeof(Messages);
 		readonly Func<string> accessor;
-		Type resourceType;
-		string resourceName;
+		readonly Type resourceType;
+		readonly string resourceName;
 
+		/// <summary>
+		/// Creates a new instance of the LocalizedErrorMessageSource class using the specified resource name and resource type.
+		/// </summary>
+		/// <param name="resourceType">The resource type</param>
+		/// <param name="resourceName">The resource name</param>
 		public LocalizedErrorMessageSource(Type resourceType, string resourceName) {
 			this.resourceType = resourceType;
 			this.resourceName = resourceName;
@@ -83,6 +65,11 @@ namespace FluentValidation.Resources {
 			accessor = () => (string)property.GetValue(null, null);
 		}
 
+		/// <summary>
+		/// Creates an IErrorMessageSource from an expression: () => MyResources.SomeResourceName
+		/// </summary>
+		/// <param name="expression">The expression </param>
+		/// <returns>Error message source</returns>
 		public static IErrorMessageSource CreateFromExpression(Expression<Func<string>> expression) {
 			var constant = expression.Body as ConstantExpression;
 
@@ -101,14 +88,24 @@ namespace FluentValidation.Resources {
 			return new LocalizedErrorMessageSource(resourceType, resourceName);
 		}
 
+		/// <summary>
+		/// Construct the error message template
+		/// </summary>
+		/// <returns>Error message template</returns>
 		public string BuildErrorMessage() {
 			return accessor();
 		}
 
+		/// <summary>
+		/// The name of the resource if localized.
+		/// </summary>
 		public string ResourceName {
 			get { return resourceName;}
 		}
 
+		/// <summary>
+		/// The type of the resource provider if localized.
+		/// </summary>
 		public Type ResourceType {
 			get { return resourceType; }
 		}

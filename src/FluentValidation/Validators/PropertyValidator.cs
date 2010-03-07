@@ -34,30 +34,6 @@ namespace FluentValidation.Validators {
 
 		public bool SupportsStandaloneValidation { get; set; }
 
-		public Type ErrorMessageResourceType {
-			get { return errorSource.ResourceType; }
-		}
-
-		public string ErrorMessageResourceName {
-			get { return errorSource.ResourceName; }
-		}
-
-		public string ErrorMessageTemplate {
-			get { return errorSource.BuildErrorMessage(); }
-		}
-
-		public void SetErrorMessage(string errorMessage) {
-			errorSource = new StringErrorMessageSource(errorMessage);
-		}
-
-		public void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
-			errorSource = new LocalizedErrorMessageSource(errorMessageResourceType, resourceName);
-		}
-
-		public void SetErrorMessage(Expression<Func<string>> resourceSelector) {
-			errorSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector);
-		}
-
 		public ICollection<Func<object, object>> CustomMessageFormatArguments {
 			get { return customFormatArgs; }
 		}
@@ -72,6 +48,16 @@ namespace FluentValidation.Validators {
 
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
 			errorSource = LocalizedErrorMessageSource.CreateFromExpression(errorMessageResourceSelector);
+		}
+
+		public IErrorMessageSource ErrorMessageSource {
+			get { return errorSource; }
+			set {
+				if(value == null) {
+					throw new ArgumentNullException("value");
+				}
+				errorSource = value;
+			}
 		}
 
 		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
@@ -96,7 +82,7 @@ namespace FluentValidation.Validators {
 				customFormatArgs.Select(func => func(context.Instance)).ToArray()
 			);
 
-			string error = context.MessageFormatter.BuildMessage(ErrorMessageTemplate);
+			string error = context.MessageFormatter.BuildMessage(errorSource.BuildErrorMessage());
 
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 
