@@ -15,14 +15,15 @@
 
         private void CopyErrorMessages(IPropertyValidator source, Rule destination)
         {
-            // We don't ever use arguments in our code, but I assume we don't want to copy
-            // the message if there are arguments as it appears xVal doesn't do them? </FV + xVal Newb>
             if (source.CustomMessageFormatArguments.Count == 0)
             {
-                // So these should be a straight copy right? Or do I need to check if they're null/empty?
-                destination.ErrorMessage = source.ErrorMessageTemplate;
-                destination.ErrorMessageResourceName = source.ErrorMessageResourceName;
-                destination.ErrorMessageResourceType = source.ErrorMessageResourceType;
+				if(source.ErrorMessageSource.ResourceType != null && source.ErrorMessageSource.ResourceName != null) {
+					destination.ErrorMessageResourceName = source.ErrorMessageSource.ResourceName;
+					destination.ErrorMessageResourceType = source.ErrorMessageSource.ResourceType;
+				}
+				else {
+					destination.ErrorMessage = source.ErrorMessageSource.BuildErrorMessage();
+				}
             }
         }
 
