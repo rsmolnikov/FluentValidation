@@ -13,32 +13,79 @@
 		readonly IValidatorFactory factory;
 		readonly RuleEmitterList<IPropertyValidator> ruleEmitters = new RuleEmitterList<IPropertyValidator>();
 
+        private void CopyErrorMessages(IPropertyValidator source, Rule destination)
+        {
+            // We don't ever use arguments in our code, but I assume we don't want to copy
+            // the message if there are arguments as it appears xVal doesn't do them? </FV + xVal Newb>
+            if (source.CustomMessageFormatArguments.Count == 0)
+            {
+                // So these should be a straight copy right? Or do I need to check if they're null/empty?
+                destination.ErrorMessage = source.ErrorMessageTemplate;
+                destination.ErrorMessageResourceName = source.ErrorMessageResourceName;
+                destination.ErrorMessageResourceType = source.ErrorMessageResourceType;
+            }
+        }
+
 		public FluentValidationRulesProvider(IValidatorFactory factory) {
 			this.factory = factory;
 
-			ruleEmitters.AddSingle<INotNullValidator>(x => new RequiredRule());
-			ruleEmitters.AddSingle<INotEmptyValidator>(x => new RequiredRule());
-			ruleEmitters.AddSingle<ILengthValidator>(x => new StringLengthRule(x.Min, x.Max));
-			ruleEmitters.AddSingle<IEmailValidator>(x => new DataTypeRule(DataTypeRule.DataType.EmailAddress));
-			ruleEmitters.AddSingle<IRegularExpressionValidator>(x => new RegularExpressionRule(x.Expression));
+            ruleEmitters.AddSingle<INotNullValidator>(x => {
+                Rule rule = new RequiredRule();
+                CopyErrorMessages(x, rule);
+                return rule;
+            });
+
+            ruleEmitters.AddSingle<INotEmptyValidator>(x =>
+            {
+                Rule rule = new RequiredRule();
+                CopyErrorMessages(x, rule);
+                return rule;
+            });
+
+			ruleEmitters.AddSingle<ILengthValidator>(x => 
+            { 
+                Rule rule = new StringLengthRule(x.Min, x.Max);
+                CopyErrorMessages(x, rule);
+                return rule;
+            });
+
+			ruleEmitters.AddSingle<IEmailValidator>(x => 
+            {
+                Rule rule = new DataTypeRule(DataTypeRule.DataType.EmailAddress);
+                CopyErrorMessages(x, rule);
+                return rule;
+            });
+
+            ruleEmitters.AddSingle<IRegularExpressionValidator>(x => 
+            {
+                 Rule rule = new RegularExpressionRule(x.Expression);
+                 CopyErrorMessages(x, rule);
+                 return rule;
+            });
 
 			ruleEmitters.AddSingle<IComparisonValidator>(x => {
+                Rule rule = null;
+
 				if (x.Comparison == Comparison.Equal && x.MemberToCompare != null)
-					return new ComparisonRule(x.MemberToCompare.Name, ComparisonRule.Operator.Equals);
+					rule = new ComparisonRule(x.MemberToCompare.Name, ComparisonRule.Operator.Equals);
 				if (x.Comparison == Comparison.NotEqual && x.MemberToCompare != null)
-					return new ComparisonRule(x.MemberToCompare.Name, ComparisonRule.Operator.DoesNotEqual);
+					rule = new ComparisonRule(x.MemberToCompare.Name, ComparisonRule.Operator.DoesNotEqual);
 				if (x.Comparison == Comparison.GreaterThanOrEqual && x.ValueToCompare != null)
-					return GenerateComparisonRule(x.ValueToCompare, x.Comparison);
+					rule = GenerateComparisonRule(x.ValueToCompare, x.Comparison);
 				if (x.Comparison == Comparison.LessThanOrEqual && x.ValueToCompare != null)
-					return GenerateComparisonRule(x.ValueToCompare, x.Comparison);
-				return null;
+					rule = GenerateComparisonRule(x.ValueToCompare, x.Comparison);
+                if (rule != null)
+                {
+                    CopyErrorMessages(x, rule);
+                }
+				return rule;
 			});
 
 			//The rule for DelegatingValidator *must* be last
 			ruleEmitters.AddMultiple<IDelegatingValidator>(x => {
 				var delegatingValidator = x as IDelegatingValidator;
 				if (delegatingValidator != null) {
-					return ruleEmitters.EmitRules(delegatingValidator.InnerValidator);
+                    return ruleEmitters.EmitRules(delegatingValidator.InnerValidator);
 				}
 				return null;
 			});
@@ -86,7 +133,7 @@
 			return RuleSet.Empty;
 		}
 
-		IEnumerable<Rule> ConvertToXValRules(IPropertyValidator val) {
+		IEnumerable<Rule> ConvertToXValRules(IPropertyValidator val) {            
 			return ruleEmitters.EmitRules(val);
 		}
 	}
