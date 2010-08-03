@@ -62,6 +62,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\mvc\System.Web.Mvc.dll</HintPath>
@@ -83,10 +85,12 @@
     <Compile Include="AttributeMetadataValidator.cs" />
     <Compile Include="FluentValidationModelBinder.cs" />
     <Compile Include="FluentValidationModelBinderDecorator.cs" />
+    <Compile Include="FluentValidationModelClientValidationRules.cs" />
     <Compile Include="FluentValidationModelMetadataProvider.cs" />
     <Compile Include="FluentValidationModelValidator.cs" />
     <Compile Include="FluentValidationModelValidatorProvider.cs" />
     <Compile Include="FluentValidationPropertyValidator.cs" />
+    <Compile Include="HtmlHelperExtensions.cs" />
     <Compile Include="MetadataExtensions.cs" />
     <Compile Include="ValidationResultExtension.cs" />
   </ItemGroup>

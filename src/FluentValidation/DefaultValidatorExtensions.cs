@@ -452,5 +452,19 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
 			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator(from, to));
 		}
+
+        /// <summary>
+        /// Defines an 'IsOfType' validator on the current rule builder.
+        /// Validation will fail if the value of the property is not matches to specified type.
+        /// </summary>
+        /// <typeparam name="T">Type of object being validated</typeparam>
+        /// <typeparam name="TProperty">Type of property being validated</typeparam>
+        /// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+        /// <param name="typeName">Name of type to compare.</param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, string> IsOfType<T>(this IRuleBuilder<T, string> ruleBuilder, ValidatableTypes typeName)
+        {
+            return ruleBuilder.SetValidator(new TypeValidator(typeName));
+        }
 	}
 }

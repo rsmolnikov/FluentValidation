@@ -36,7 +36,10 @@ namespace FluentValidation.Mvc {
 			{ typeof(INotNullValidator), RequiredFluentValidationPropertyValidator.Create },
 			{ typeof(INotEmptyValidator), RequiredFluentValidationPropertyValidator.Create },
 			{ typeof(IRegularExpressionValidator), RegularExpressionFluentValidationPropertyValidator.Create },
-			{ typeof(ILengthValidator), StringLengthFluentValidationPropertyValidator.Create }
+			{ typeof(ILengthValidator), StringLengthFluentValidationPropertyValidator.Create },
+            { typeof(ITypeValidator), TypeFluentValidationPropertyValidator.Create },
+            { typeof(IBetweenValidator), RangeFluentValidationPropertyValidator.Create },
+            { typeof(EqualValidator), EqualFluentValidationPropertyValidator.Create }
 		};
 
 		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory) {
