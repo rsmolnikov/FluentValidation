@@ -61,8 +61,9 @@ namespace FluentValidation.Mvc {
 			if (validator != null) {
 				var descriptor = validator.CreateDescriptor();
 
-				var validators = descriptor.GetValidatorsForMember(metadata.PropertyName)
-					.Where(x => x.SupportsStandaloneValidation);
+                var validators = descriptor.GetValidatorsForMember(metadata.PropertyName);
+					 //Equal validator with MemberInfo not support standalone
+					//.Where(x => x.SupportsStandaloneValidation);
 
 				foreach(var propertyValidator in validators) {
 					modelValidators.Add(GetModelValidator(metadata, context, propertyValidator));

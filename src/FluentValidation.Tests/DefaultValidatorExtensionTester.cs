@@ -139,6 +139,13 @@ namespace FluentValidation.Tests {
 			AssertValidator<GreaterThanOrEqualValidator>();
 		}
 
+        [Test]
+        public void IsOfType_should_create_TypeValidator()
+        {
+            validator.RuleFor(x => x.Email).IsOfType(ValidatableTypes.email);
+            AssertValidator<TypeValidator>();
+        }
+
 		private void AssertValidator<TValidator>() {
 			var rule = (PropertyRule<Person>)validator.First();
 			rule.CurrentValidator.ShouldBe<TValidator>();
