@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomValidatorExtensions.cs" />
+    <Compile Include="Mvc\FluentValidationPropertyValidators.cs" />
     <Compile Include="Mvc\CustomFluentValidationModelValidatorProvider.cs" />
     <Compile Include="Mvc\CustomFluentValidationModelValidator.cs" />
     <Compile Include="Mvc\CustomFluentValidationPropertyValidators.cs" />
@@ -66,6 +67,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y C:\Work\SRC\GitHub\FluentValidation\src\FluentValidation.Extensions\bin\Debug\FluentValidation.Extensions* C:\Work\SRC\AIM\Framework\Dependencies</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

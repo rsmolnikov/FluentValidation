@@ -1,4 +1,4 @@
-namespace FluentValidation.Extensions.Mvc
+namespace FluentValidation.Extensions
 {
 	using System;
 	using System.Collections.Generic;

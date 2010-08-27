@@ -1,8 +1,8 @@
 namespace FluentValidation.Extensions.Validators
 {
-	using System;
-	using System.Text.RegularExpressions;
     using FluentValidation.Validators;
+    using System.Text.RegularExpressions;
+    using System;
 
     //names are similar to JQuery.validation methods
     public enum ValidatableTypes
@@ -15,7 +15,8 @@ namespace FluentValidation.Extensions.Validators
         url
     }
 
-	public class TypeValidator : PropertyValidator, ITypeValidator {
+    public class TypeValidator : PropertyValidator, ITypeValidator
+    {
         readonly ValidatableTypes typeName;
         private Regex re;
 
@@ -24,12 +25,13 @@ namespace FluentValidation.Extensions.Validators
             : base(String.Format("The value must be of type '{0}'", typeName))
         {
             this.typeName = typeName;
-           
 
-			SupportsStandaloneValidation = true;
-		}
 
-		protected override bool IsValid(PropertyValidatorContext context) {
+            SupportsStandaloneValidation = true;
+        }
+
+        protected override bool IsValid(PropertyValidatorContext context)
+        {
             if (context.PropertyValue == null) return true;
             bool fail = false;
             string stringTarget = Convert.ToString(context.PropertyValue);
@@ -58,15 +60,16 @@ namespace FluentValidation.Extensions.Validators
             if (re != null)
                 fail = !re.IsMatch(stringTarget);
             return !fail;
-		}
+        }
 
         public ValidatableTypes TypeName
         {
             get { return typeName; }
-		}
-	}
+        }
+    }
 
-	public interface ITypeValidator : IPropertyValidator {
+    public interface ITypeValidator : IPropertyValidator
+    {
         ValidatableTypes TypeName { get; }
-	}
+    }
 }
