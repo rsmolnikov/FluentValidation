@@ -9,34 +9,32 @@ namespace FluentValidation.Extensions
     using FluentValidation.Validators;
     using FluentValidation.Mvc;
 
-    public delegate ModelValidator CustomFluentValidationModelValidationFactory(ModelMetadata metadata, ControllerContext context, IPropertyValidator validator);
-
-	/// <summary>
-	/// Implementation of ModelValidatorProvider that uses FluentValidation.
-	/// </summary>
-    public class CustomFluentValidationModelValidatorProvider : ModelValidatorProvider
+    public class ExtendedFluentValidationModelValidatorProvider : FluentValidationModelValidatorProvider
     {
         readonly IValidatorFactory validatorFactory;
-        public bool AddImplicitRequiredValidator { get; set; }
 
-        private Dictionary<Type, CustomFluentValidationModelValidationFactory> validatorFactories = new Dictionary<Type, CustomFluentValidationModelValidationFactory>() {
+        private Dictionary<Type, FluentValidationModelValidationFactory> validatorFactories = new Dictionary<Type, FluentValidationModelValidationFactory>() {
             { typeof(ITypeValidator), TypeFluentValidationPropertyValidator.Create },
             { typeof(IBetweenValidator), RangeFluentValidationPropertyValidator.Create },
             { typeof(EqualValidator), EqualFluentValidationPropertyValidator.Create },
 		};
        
-        public CustomFluentValidationModelValidatorProvider(IValidatorFactory validatorFactory)
+        public ExtendedFluentValidationModelValidatorProvider(IValidatorFactory validatorFactory):base(validatorFactory)
         {
 			AddImplicitRequiredValidator = true;
 			this.validatorFactory = validatorFactory;
 		}
 
 		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, ControllerContext context) {
-			if (IsValidatingProperty(metadata)) {
-				return GetValidatorsForProperty(metadata, context, validatorFactory.GetValidator(metadata.ContainerType));
+            var modelValidators = new List<ModelValidator>();
+            modelValidators.AddRange(base.GetValidators(metadata,context));
+            if (IsValidatingProperty(metadata)) {
+				modelValidators.AddRange(GetValidatorsForProperty(metadata, context, validatorFactory.GetValidator(metadata.ContainerType)));
+                return modelValidators;
 			}
 
-			return GetValidatorsForModel(metadata, context, validatorFactory.GetValidator(metadata.ModelType));
+			modelValidators.AddRange(GetValidatorsForModel(metadata, context, validatorFactory.GetValidator(metadata.ModelType)));
+            return modelValidators;
 		}
 
 		IEnumerable<ModelValidator> GetValidatorsForProperty(ModelMetadata metadata, ControllerContext context, IValidator validator) {

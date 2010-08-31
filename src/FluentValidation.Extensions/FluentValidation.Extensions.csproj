@@ -49,10 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomValidatorExtensions.cs" />
-    <Compile Include="Mvc\FluentValidationPropertyValidators.cs" />
-    <Compile Include="Mvc\CustomFluentValidationModelValidatorProvider.cs" />
+    <Compile Include="Mvc\ExtendedFluentValidationModelValidatorProvider.cs" />
     <Compile Include="Mvc\CustomFluentValidationModelValidator.cs" />
     <Compile Include="Mvc\CustomFluentValidationPropertyValidators.cs" />
+    <Compile Include="Mvc\FluentValidationModelClientValidationRules.cs" />
     <Compile Include="Validators\TypeValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
