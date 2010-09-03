@@ -9,7 +9,7 @@ namespace FluentValidation.Extensions
     using FluentValidation.Validators;
     using FluentValidation.Mvc;
 
-    public class ExtendedFluentValidationModelValidatorProvider : FluentValidationModelValidatorProvider
+    public class ExtendedFluentValidationModelValidatorProvider: ModelValidatorProvider
     {
         readonly IValidatorFactory validatorFactory;
 
@@ -19,22 +19,17 @@ namespace FluentValidation.Extensions
             { typeof(EqualValidator), EqualFluentValidationPropertyValidator.Create },
 		};
        
-        public ExtendedFluentValidationModelValidatorProvider(IValidatorFactory validatorFactory):base(validatorFactory)
+        public ExtendedFluentValidationModelValidatorProvider(IValidatorFactory validatorFactory)
         {
-			AddImplicitRequiredValidator = true;
 			this.validatorFactory = validatorFactory;
 		}
 
 		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, ControllerContext context) {
-            var modelValidators = new List<ModelValidator>();
-            modelValidators.AddRange(base.GetValidators(metadata,context));
             if (IsValidatingProperty(metadata)) {
-				modelValidators.AddRange(GetValidatorsForProperty(metadata, context, validatorFactory.GetValidator(metadata.ContainerType)));
-                return modelValidators;
+				return GetValidatorsForProperty(metadata, context, validatorFactory.GetValidator(metadata.ContainerType));  
 			}
 
-			modelValidators.AddRange(GetValidatorsForModel(metadata, context, validatorFactory.GetValidator(metadata.ModelType)));
-            return modelValidators;
+			return new List<ModelValidator>();
 		}
 
 		IEnumerable<ModelValidator> GetValidatorsForProperty(ModelMetadata metadata, ControllerContext context, IValidator validator) {
@@ -64,12 +59,6 @@ namespace FluentValidation.Extensions
 				.FirstOrDefault() ?? FluentValidationPropertyValidator.Create;
 
 			return factory(meta, context, propertyValidator);
-		}
-
-		IEnumerable<ModelValidator> GetValidatorsForModel(ModelMetadata metadata, ControllerContext context, IValidator validator) {
-			if (validator != null) {
-                yield return new CustomFluentValidationModelValidator(metadata, context, validator);
-			}
 		}
 
 		bool IsValidatingProperty(ModelMetadata metadata) {
