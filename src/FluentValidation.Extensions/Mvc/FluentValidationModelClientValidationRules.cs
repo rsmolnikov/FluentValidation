@@ -1,13 +1,9 @@
-namespace FluentValidation.Extensions
+namespace FluentValidation.Extensions.Mvc
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Web.Mvc;
     using System.Reflection;
-    using FluentValidation.Validators;
-    using FluentValidation.Extensions.Validators;
+    using Validators;
 
     /// <summary>
     /// ModelClientValidationRule implementations

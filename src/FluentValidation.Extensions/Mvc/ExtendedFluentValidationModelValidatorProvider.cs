@@ -1,10 +1,10 @@
-namespace FluentValidation.Extensions
+namespace FluentValidation.Extensions.Mvc
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Web.Mvc;
-	using Validators;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Mvc;
+    using Validators;
     using FluentValidation;
     using FluentValidation.Validators;
     using FluentValidation.Mvc;
@@ -52,7 +52,6 @@ namespace FluentValidation.Extensions
 
 		private ModelValidator GetModelValidator(ModelMetadata meta, ControllerContext context, IPropertyValidator propertyValidator) {
 			var type = propertyValidator.GetType();
-			
 			var factory = validatorFactories
 				.Where(x => x.Key.IsAssignableFrom(type))
 				.Select(x => x.Value)

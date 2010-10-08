@@ -1,13 +1,10 @@
-namespace FluentValidation.Extensions
+namespace FluentValidation.Extensions.Mvc
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Web.Mvc;
-	using Validators;
-	using System.Linq;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
+    using Validators;
     using FluentValidation.Mvc;
     using FluentValidation.Validators;
-    using System.Reflection;
 
     internal class TypeFluentValidationPropertyValidator : FluentValidationPropertyValidator
     {
