@@ -56,19 +56,25 @@ namespace FluentValidation.Internal {
 		/// Sets the validator associated with the rule. Use with complex properties where an IValidator instance is already declared for the property type.
 		/// </summary>
 		/// <param name="validator">The validator to set</param>
-		public IRuleBuilderOptions<T, TProperty> SetValidator(IValidator<TProperty> validator) {
+		public IRuleBuilderOptions<T, TProperty> SetValidator(IValidator validator) {
 			validator.Guard("Cannot pass a null validator to SetValidator");
-			SetValidator(new ChildValidatorAdaptor<TProperty>(validator));
+			SetValidator(Extensions.InferPropertyValidatorForChildValidator(Rule, validator));
 			return this;
 		}
 
-		public IRuleBuilderOptions<T, TProperty> Configure(Action<PropertyRule<T>> configurator) {
+		[Obsolete("Use Cascade(CascadeMode.StopOnFirstFailure) or Cascade(CascadeMode.Continue) instead")]
+		public CascadeStep<T, TProperty> Cascade() {
+			return new CascadeStep<T, TProperty>(this);
+		}
+
+		IRuleBuilderOptions<T, TProperty> IConfigurable<PropertyRule<T>, IRuleBuilderOptions<T, TProperty>>.Configure(Action<PropertyRule<T>> configurator) {
 			configurator(rule);
 			return this;
 		}
 
-		public CascadeStep<T, TProperty> Cascade() {
-			return new CascadeStep<T, TProperty>(this);
+		IRuleBuilderInitial<T, TProperty> IConfigurable<PropertyRule<T>, IRuleBuilderInitial<T, TProperty>>.Configure(Action<PropertyRule<T>> configurator) {
+			configurator(rule);
+			return this;
 		}
 	}
 }

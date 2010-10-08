@@ -1,9 +1,26 @@
-1.3 beta 1 -
+2.0 beta 1 - October 7 2010
+* AttributedValidatorFactory is finally production worthy with the introduction of InstanceCache
+* Fixed an issue where CascadeMode values are ignored if they're changed after the rules have been defined.
+* Ported FluentValidation to WP7.
+* ShouldHaveChildValidator test helper now works with child collection validators
+* Simplified the implementation of SetValidator.
+* MVC3 integration
+
+1.3 - July 26 2010
 * Added non-generic ValidationContext to allow for using Validator Selectors with non-generic IValidator instances
 * Simplified the internal model
 * Patch - Italian language resources
 * Introduced IErrorMessageSource to abstract different mechanisms for building error messages
-* Make ChildValidatorAdaptor public
+* Made ChildValidatorAdaptor public
+* Silverlight build is now signed
+* Allow cascade mode to be set at the validator level.
+* Deprecated Cascade().StopOnFirstFailure() / Cascade().Continue() in favour of Cascade(cascadeMode) for consistency
+* Deprecated PropertyRule.ReplaceCurrentValidator(newValidator) with PropertyRule.ReplaceValidator(originalValidator, newValidator)
+* *Breaking change* Changed default behaviour of When/Unless. They now apply to all previous validators in the chain, not only to the current one. Previous behaviour can be maintained by using the overload that takes an ApplyConditionTo.
+* NotEmpty now considers strings that contain whitespace as invalid.
+* Added ShouldHaveChildValidator(x => x.Property, typeof(SomeChildValidator)) test extension
+* xVal integration supports custom error messages
+* Made IAttributeMetadataValidator public
 
 1.2 for SL4 - April 29 2010
 * Ported 1.2 codebase to Silverlight 4.

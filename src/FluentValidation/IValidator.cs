@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation {
+	using System;
 	using System.Collections.Generic;
 	using Internal;
 	using Results;
@@ -34,6 +35,11 @@ namespace FluentValidation {
 		/// <param name="context">A ValidationContext</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		ValidationResult Validate(ValidationContext<T> context);
+
+		/// <summary>
+		/// Sets the cascade mode for all rules within this validator.
+		/// </summary>
+		CascadeMode CascadeMode { get; set; }
 	}
 
 	public interface IValidator {
@@ -57,5 +63,10 @@ namespace FluentValidation {
 		/// </summary>
 		/// <returns>A IValidatorDescriptor object which contains methods to access metadata</returns>
 		IValidatorDescriptor CreateDescriptor();
+
+		/// <summary>
+		/// Checks to see whether the validator can validate objects of the specified type
+		/// </summary>
+		bool CanValidateInstancesOfType(Type type);
 	}
 }

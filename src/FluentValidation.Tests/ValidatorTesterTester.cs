@@ -69,5 +69,46 @@ namespace FluentValidation.Tests {
 		public void ShouldNotHaveValidationError_should_throw_when_there_are_errors_with_preconstructed_object() {
 			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldNotHaveValidationErrorFor(x => x.Forename, new Person { Forename = null }));
 		}
+
+
+		[Test]
+		public void ShouldHaveChildValidator_throws_when_property_does_not_have_child_validator() {
+			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() =>
+				validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator))
+			);
+
+			ex.Message.ShouldEqual("Expected property 'Address' to have a child validator of type 'AddressValidator.'");
+		}
+
+	
+		[Test]
+		public void ShouldHaveChildValidator_should_not_throw_when_property_Does_have_child_validator() {
+			validator.RuleFor(x => x.Address).SetValidator(new AddressValidator());
+			validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator));
+		}
+
+		[Test]
+		public void ShouldHaveChildvalidator_throws_when_collection_property_Does_not_have_child_validator() {
+			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() => 
+				validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator))
+			);
+
+			ex.Message.ShouldEqual("Expected property 'Orders' to have a child validator of type 'OrderValidator.'");
+		}
+
+		[Test]
+		public void ShouldHaveChildValidator_should_not_throw_when_property_does_not_have_child_validator() {
+			validator.RuleFor(x => x.Orders).SetValidator(new OrderValidator());
+			validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator));
+		}
+
+
+		private class AddressValidator:AbstractValidator<Address> {
+			
+		}
+
+		private class OrderValidator:AbstractValidator<Order> {
+			
+		}
 	}
 }

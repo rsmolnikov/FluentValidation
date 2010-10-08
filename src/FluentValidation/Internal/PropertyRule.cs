@@ -27,12 +27,7 @@ namespace FluentValidation.Internal {
 
 	public class PropertyRule<T> : IValidationRule<T> {
 		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
-		Func<CascadeMode> cascadeMode = () => ValidatorOptions.CascadeMode;
-
-		public CascadeMode CascadeMode {
-			get { return cascadeMode(); }
-			set { cascadeMode = () => value; }
-		}
+		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
 
 		public MemberInfo Member { get; private set; }
 		public PropertySelector PropertyFunc { get; private set; }
@@ -40,26 +35,38 @@ namespace FluentValidation.Internal {
 		public string CustomPropertyName { get; set; }
 		public Action<object> OnFailure { get; set; }
 		public IPropertyValidator CurrentValidator { get; private set; }
+		public Type TypeToValidate { get; private set; }
+
+		public CascadeMode CascadeMode {
+			get { return cascadeModeThunk(); }
+			set { cascadeModeThunk = () => value; }
+		}
 
 		public IEnumerable<IPropertyValidator> Validators {
 			get { return validators.AsReadOnly(); }
 		}
 
-		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, Expression expression) {
+		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, Expression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate) {
 			Member = member;
 			PropertyFunc = propertyFunc;
 			Expression = expression;
 			OnFailure = x => { };
+			TypeToValidate = typeToValidate;
+			this.cascadeModeThunk = cascadeModeThunk;
 
 			PropertyName = ValidatorOptions.PropertyNameResolver(typeof(T), member);
 		}
 
 		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression) {
+			return Create(expression, () => ValidatorOptions.CascadeMode);
+		}
+
+		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk) {
 			var member = expression.GetMember();
 			var compiled = expression.Compile();
 			PropertySelector propertySelector = x => compiled((T)x);
 
-			return new PropertyRule<T>(member, propertySelector, expression);
+			return new PropertyRule<T>(member, propertySelector, expression, cascadeModeThunk, typeof(TProperty));
 		}
 
 		public void AddValidator(IPropertyValidator validator) {
@@ -67,12 +74,21 @@ namespace FluentValidation.Internal {
 			validators.Add(validator);
 		}
 
+		public void ReplaceValidator(IPropertyValidator original, IPropertyValidator newValidator) {
+			var index = validators.IndexOf(original);
+			
+			if(index > -1) {
+				validators[index] = newValidator;
+
+				if(ReferenceEquals(CurrentValidator, original)) {
+					CurrentValidator = newValidator;
+				}
+			}
+		}
+
+		[Obsolete("Use ReplaceValiadtor instead.")]
 		public void ReplaceCurrentValidtor(IPropertyValidator newValidator) {
-			var index = validators.IndexOf(CurrentValidator);
-			//TODO: Ensure that it is a valid index
-			validators.Insert(index, newValidator);
-			validators.Remove(CurrentValidator);
-			CurrentValidator = newValidator;
+			ReplaceValidator(CurrentValidator, newValidator);
 		}
 
 		/// <summary>
@@ -86,7 +102,7 @@ namespace FluentValidation.Internal {
 		}
 
 		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
-			var cascade = cascadeMode();
+			var cascade = cascadeModeThunk();
 			bool hasAnyFailure = false;
 
 			foreach (var validator in validators) {
@@ -100,7 +116,7 @@ namespace FluentValidation.Internal {
 					yield return result;
 				}
 
-				if (cascade == CascadeMode.StopOnFirstFailure && hasFailure) {
+				if (cascade == FluentValidation.CascadeMode.StopOnFirstFailure && hasFailure) {
 					break;
 				}
 			}
