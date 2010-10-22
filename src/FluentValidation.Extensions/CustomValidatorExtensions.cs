@@ -1,5 +1,8 @@
 namespace FluentValidation.Extensions
 {
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
     using Validators;
     using FluentValidation;
 

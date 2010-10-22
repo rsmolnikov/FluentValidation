@@ -13,10 +13,24 @@ namespace FluentValidation.Extensions.Mvc
     {
         readonly IValidatorFactory validatorFactory;
 
-        private Dictionary<Type, FluentValidationModelValidationFactory> validatorFactories = new Dictionary<Type, FluentValidationModelValidationFactory>() {
+        //we need full list for delegatingvalidator
+        private static readonly Dictionary<Type, FluentValidationModelValidationFactory> validatorFactoriesFullList = new Dictionary<Type, FluentValidationModelValidationFactory>() {
+            { typeof(INotNullValidator), RequiredFluentValidationPropertyValidator.Create },
+			{ typeof(INotEmptyValidator), RequiredFluentValidationPropertyValidator.Create },
+			{ typeof(IRegularExpressionValidator), RegularExpressionFluentValidationPropertyValidator.Create },
+			{ typeof(ILengthValidator), StringLengthFluentValidationPropertyValidator.Create },
             { typeof(ITypeValidator), TypeFluentValidationPropertyValidator.Create },
             { typeof(IBetweenValidator), RangeFluentValidationPropertyValidator.Create },
             { typeof(EqualValidator), EqualFluentValidationPropertyValidator.Create },
+            { typeof(IDelegatingValidator), DelegatingFluentValidationPropertyValidator.Create },
+		};
+
+        //this is truly extension
+        private readonly Dictionary<Type, FluentValidationModelValidationFactory> validatorFactories = new Dictionary<Type, FluentValidationModelValidationFactory>() {
+            { typeof(ITypeValidator), TypeFluentValidationPropertyValidator.Create },
+            { typeof(IBetweenValidator), RangeFluentValidationPropertyValidator.Create },
+            { typeof(EqualValidator), EqualFluentValidationPropertyValidator.Create },
+            { typeof(CustomDelegatingValidator), DelegatingFluentValidationPropertyValidator.Create },
 		};
        
         public ExtendedFluentValidationModelValidatorProvider(IValidatorFactory validatorFactory)
@@ -50,15 +64,31 @@ namespace FluentValidation.Extensions.Mvc
 			return modelValidators;
 		}
 
-		private ModelValidator GetModelValidator(ModelMetadata meta, ControllerContext context, IPropertyValidator propertyValidator) {
+        //we need this for delegatingvalidator
+		public static ModelValidator GetModelValidatorFromFullList(ModelMetadata meta, ControllerContext context, IPropertyValidator propertyValidator) {
 			var type = propertyValidator.GetType();
-			var factory = validatorFactories
+			var factory = validatorFactoriesFullList
 				.Where(x => x.Key.IsAssignableFrom(type))
 				.Select(x => x.Value)
 				.FirstOrDefault() ?? FluentValidationPropertyValidator.Create;
 
 			return factory(meta, context, propertyValidator);
 		}
+        ModelValidator CreateNotNullValidatorForProperty(ModelMetadata metadata, ControllerContext cc)
+        {
+            return RequiredFluentValidationPropertyValidator.Create(metadata, cc, new NotNullValidator());
+        }
+
+        private ModelValidator GetModelValidator(ModelMetadata meta, ControllerContext context, IPropertyValidator propertyValidator)
+        {
+            var type = propertyValidator.GetType();
+            var factory = validatorFactories
+                .Where(x => x.Key.IsAssignableFrom(type))
+                .Select(x => x.Value)
+                .FirstOrDefault() ?? FluentValidationPropertyValidator.Create;
+
+            return factory(meta, context, propertyValidator);
+        }
 
 		bool IsValidatingProperty(ModelMetadata metadata) {
 			return metadata.ContainerType != null && !string.IsNullOrEmpty(metadata.PropertyName);

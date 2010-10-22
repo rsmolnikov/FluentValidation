@@ -4,6 +4,8 @@ namespace FluentValidation.Extensions.Mvc
     using System.Web.Mvc;
     using System.Reflection;
     using Validators;
+using System.Linq.Expressions;
+    using FluentValidation.Extensions.Utilities;
 
     /// <summary>
     /// ModelClientValidationRule implementations
@@ -37,6 +39,18 @@ namespace FluentValidation.Extensions.Mvc
             base.ErrorMessage = errorMessage;
             base.ValidationType = "equalTo";
             base.ValidationParameters.Add("equalTo", Convert.ToString(memberToCompare.Name));
+        }
+    }
+
+    public class ModelClientValidationDelegating : ModelClientValidationRule
+    {
+        public ModelClientValidationDelegating(ModelClientValidationRule innerValidatoinRule, Expression expression)
+        {
+            base.ErrorMessage = innerValidatoinRule.ErrorMessage;
+            base.ValidationType = "wrappedRule";
+            base.ValidationParameters.Add("ruleType", Convert.ToString(innerValidatoinRule.ValidationType));
+            base.ValidationParameters.Add("ruleParams", innerValidatoinRule.ValidationParameters );
+            base.ValidationParameters.Add("expression", ExpressionParser.ConvertToJSCompliantString(expression));
         }
     }
 }

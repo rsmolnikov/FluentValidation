@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Spark">
-      <HintPath>..\Client-side validation with FluentValidation\bin\Spark.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -49,9 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomValidatorExtensions.cs" />
+    <Compile Include="CustomValidatorOptions.cs" />
     <Compile Include="Mvc\ExtendedFluentValidationModelValidatorProvider.cs" />
     <Compile Include="Mvc\CustomFluentValidationPropertyValidators.cs" />
     <Compile Include="Mvc\FluentValidationModelClientValidationRules.cs" />
+    <Compile Include="Utilities\ExpressionParser.cs" />
+    <Compile Include="Validators\CustomDelegatingValidator.cs" />
     <Compile Include="Validators\TypeValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
