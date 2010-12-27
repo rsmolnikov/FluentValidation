@@ -60,7 +60,7 @@ namespace FluentValidation.Extensions.Utilities
                 {
                     if (member.Member.Name=="Length")
                         return String.Format("{0}.length",ConvertToJSCompliantString(member.Expression));
-                    return String.Format("$(form.{0}).val()", member.Member.Name);
+                    return String.Format("$(this.currentForm.{0}).val()", member.Member.Name);
                 }
             }
             if (typeof(ConstantExpression).IsAssignableFrom(expression.GetType()))
